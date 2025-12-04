@@ -2,7 +2,9 @@ package com.ridemate.app.security;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
@@ -18,6 +20,8 @@ class JwtUtilTest {
         jwtUtil = new JwtUtil();
         userDetails = mock(UserDetails.class);
         when(userDetails.getUsername()).thenReturn("test@test.com");
+        when(userDetails.getAuthorities())
+                .thenAnswer(invocation -> Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
     }
 
     @Test
