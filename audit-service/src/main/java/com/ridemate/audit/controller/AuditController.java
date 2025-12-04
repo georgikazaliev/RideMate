@@ -27,42 +27,42 @@ public class AuditController {
 
     @PostMapping
     public ResponseEntity<AuditEntryViewDTO> createEntry(@Valid @RequestBody CreateAuditEntryDTO dto) {
-        logger.info("POST /audit - Creating audit entry for user: {}, action: {}", dto.getUserId(),
+        logger.info("[POST /audit] Request received to create audit entry - User: {}, Action: {}", dto.getUserId(),
                 dto.getActionType());
         AuditEntryViewDTO created = auditService.createEntry(dto);
-        logger.info("POST /audit - Successfully created audit entry with id: {}", created.getId());
+        logger.info("[POST /audit] Audit entry created successfully - Entry ID: {}", created.getId());
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<AuditEntryViewDTO>> getEntriesForUser(@PathVariable UUID userId) {
-        logger.info("GET /audit/user/{} - Fetching audit entries for user", userId);
+        logger.info("[GET /audit/user/{}] Requesting audit entries", userId);
         List<AuditEntryViewDTO> entries = auditService.getEntriesForUser(userId);
-        logger.info("GET /audit/user/{} - Retrieved {} entries", userId, entries.size());
+        logger.info("[GET /audit/user/{}] Found {} audit entries", userId, entries.size());
         return ResponseEntity.ok(entries);
     }
 
     @DeleteMapping("/{entryId}")
     public ResponseEntity<Void> deleteEntry(@PathVariable UUID entryId) {
-        logger.info("DELETE /audit/{} - Deleting audit entry", entryId);
+        logger.info("[DELETE /audit/{}] Request to delete audit entry", entryId);
         auditService.deleteEntry(entryId);
-        logger.info("DELETE /audit/{} - Successfully deleted audit entry", entryId);
+        logger.info("[DELETE /audit/{}] Audit entry deleted successfully", entryId);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/purge")
     public ResponseEntity<Void> purgeOldEntries() {
-        logger.info("DELETE /audit/purge - Purging old audit entries");
+        logger.info("[DELETE /audit/purge] Initiating purge of old audit entries");
         auditService.purgeOldEntries();
-        logger.info("DELETE /audit/purge - Successfully purged old audit entries");
+        logger.info("[DELETE /audit/purge] Purge operation completed successfully");
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/user/{userId}")
     public ResponseEntity<Void> deleteEntriesForUser(@PathVariable UUID userId) {
-        logger.info("DELETE /audit/user/{} - Deleting all entries for user", userId);
+        logger.info("[DELETE /audit/user/{}] Request to clear all user audit entries", userId);
         auditService.deleteEntriesForUser(userId);
-        logger.info("DELETE /audit/user/{} - Successfully deleted all entries for user", userId);
+        logger.info("[DELETE /audit/user/{}] All user audit entries cleared successfully", userId);
         return ResponseEntity.noContent().build();
     }
 }
