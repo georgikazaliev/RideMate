@@ -31,7 +31,8 @@ public class AuditService {
     @Transactional
     @CacheEvict(value = "audit_entries", key = "#dto.userId")
     public AuditEntryViewDTO createEntry(CreateAuditEntryDTO dto) {
-        logger.info("Creating audit entry for user: {}, action: {}", dto.getUserId(), dto.getActionType());
+        logger.info("[AuditService] Creating new audit entry - User: {}, Action: {}, EntityType: {}", dto.getUserId(),
+                dto.getActionType(), dto.getEntityType());
         AuditEntry entry = new AuditEntry(
                 dto.getUserId(),
                 dto.getActionType(),
@@ -45,7 +46,7 @@ public class AuditService {
     @Transactional(readOnly = true)
     @Cacheable(value = "audit_entries", key = "#userId")
     public List<AuditEntryViewDTO> getEntriesForUser(UUID userId) {
-        logger.info("Fetching audit entries for user: {}", userId);
+        logger.info("[AuditService] Retrieving audit log entries for user ID: {}", userId);
         return auditEntryRepository.findByUserIdOrderByTimestampDesc(userId)
                 .stream()
                 .map(this::mapToViewDTO)
@@ -55,9 +56,8 @@ public class AuditService {
     @Transactional
     @CacheEvict(value = "audit_entries", allEntries = true)
 
-
     public void deleteEntry(UUID id) {
-        logger.info("Deleting audit entry: {}", id);
+        logger.info("[AuditService] Attempting to delete audit entry with ID: {}", id);
         AuditEntry entry = auditEntryRepository.findById(id)
                 .orElseThrow(() -> new AuditEntryNotFoundException("Audit entry not found with id: " + id));
         auditEntryRepository.delete(entry);
@@ -66,14 +66,14 @@ public class AuditService {
     @Transactional
     @CacheEvict(value = "audit_entries", key = "#userId")
     public void deleteEntriesForUser(UUID userId) {
-        logger.info("Deleting all audit entries for user: {}", userId);
+        logger.info("[AuditService] Clearing all audit log entries for user ID: {}", userId);
         auditEntryRepository.deleteByUserId(userId);
     }
 
     @Transactional
     @CacheEvict(value = "audit_entries", allEntries = true)
     public void purgeOldEntries() {
-        logger.info("Purging old audit entries");
+        logger.info("[AuditService] Starting purge operation for old audit entries (older than 30 days)");
         LocalDateTime cutoff = LocalDateTime.now().minusDays(30);
         auditEntryRepository.deleteOlderThan(cutoff);
     }
