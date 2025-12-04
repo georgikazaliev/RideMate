@@ -19,7 +19,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(AuditEntryNotFoundException.class)
     public ResponseEntity<Map<String, Object>> handleAuditEntryNotFound(AuditEntryNotFoundException ex) {
-        logger.error("Audit entry not found: {}", ex.getMessage());
+        logger.error("[ExceptionHandler] Audit entry lookup failed - {}", ex.getMessage());
         Map<String, Object> body = new HashMap<>();
         body.put("timestamp", LocalDateTime.now());
         body.put("status", HttpStatus.NOT_FOUND.value());
@@ -30,7 +30,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        logger.warn("Validation failed for request: {}", ex.getBindingResult().getAllErrors());
+        logger.warn("[ExceptionHandler] Request validation failure - Errors: {}", ex.getBindingResult().getAllErrors());
         Map<String, Object> body = new HashMap<>();
         body.put("timestamp", LocalDateTime.now());
         body.put("status", HttpStatus.BAD_REQUEST.value());
@@ -48,7 +48,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleGeneralException(Exception ex) {
-        logger.error("Unexpected error occurred: {}", ex.getMessage(), ex);
+        logger.error("[ExceptionHandler] Unhandled exception caught - Message: {}", ex.getMessage(), ex);
         Map<String, Object> body = new HashMap<>();
         body.put("timestamp", LocalDateTime.now());
         body.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
