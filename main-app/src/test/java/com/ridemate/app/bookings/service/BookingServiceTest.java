@@ -14,6 +14,7 @@ import com.ridemate.app.rides.repository.RideRepository;
 import com.ridemate.app.security.CustomUserDetails;
 import com.ridemate.app.users.entity.User;
 import com.ridemate.app.users.service.UserService;
+import com.ridemate.app.users.UserRole;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -56,6 +57,7 @@ class BookingServiceTest {
         CustomUserDetails currentUser = mock(CustomUserDetails.class);
         User user = new User();
         user.setId(UUID.randomUUID());
+        user.setRole(UserRole.USER);
         when(userService.getUser(currentUser)).thenReturn(user);
 
         UUID rideId = UUID.randomUUID();
@@ -66,6 +68,10 @@ class BookingServiceTest {
         ride.setId(rideId);
         ride.setSeatsAvailable(4);
         ride.setSeatsTaken(0);
+        User driver = new User();
+        driver.setId(UUID.randomUUID());
+        ride.setDriver(driver);
+        ride.setDateTime(java.time.LocalDateTime.now().plusDays(1));
         when(rideRepository.findById(rideId)).thenReturn(Optional.of(ride));
 
         Booking savedBooking = new Booking();
@@ -83,6 +89,7 @@ class BookingServiceTest {
     void createBooking_ShouldThrowConflict_WhenNoSeats() {
         CustomUserDetails currentUser = mock(CustomUserDetails.class);
         User user = new User();
+        user.setRole(UserRole.USER);
         when(userService.getUser(currentUser)).thenReturn(user);
 
         UUID rideId = UUID.randomUUID();
@@ -92,6 +99,10 @@ class BookingServiceTest {
         Ride ride = new Ride();
         ride.setSeatsAvailable(4);
         ride.setSeatsTaken(4);
+        User driver = new User();
+        driver.setId(UUID.randomUUID());
+        ride.setDriver(driver);
+        ride.setDateTime(java.time.LocalDateTime.now().plusDays(1));
         when(rideRepository.findById(rideId)).thenReturn(Optional.of(ride));
 
         assertThrows(ConflictException.class, () -> bookingService.createBooking(currentUser, bookingDto));
@@ -141,6 +152,7 @@ class BookingServiceTest {
         CustomUserDetails currentUser = mock(CustomUserDetails.class);
         User user = new User();
         user.setId(UUID.randomUUID());
+        user.setRole(UserRole.DRIVER);
         when(userService.getUser(currentUser)).thenReturn(user);
 
         UUID bookingId = UUID.randomUUID();
@@ -166,6 +178,7 @@ class BookingServiceTest {
         CustomUserDetails currentUser = mock(CustomUserDetails.class);
         User user = new User();
         user.setId(UUID.randomUUID());
+        user.setRole(UserRole.DRIVER);
         when(userService.getUser(currentUser)).thenReturn(user);
 
         UUID bookingId = UUID.randomUUID();
@@ -188,6 +201,7 @@ class BookingServiceTest {
     void createBooking_ShouldThrowException_WhenRideNotFound() {
         CustomUserDetails currentUser = mock(CustomUserDetails.class);
         User user = new User();
+        user.setRole(UserRole.USER);
         when(userService.getUser(currentUser)).thenReturn(user);
 
         UUID rideId = UUID.randomUUID();
