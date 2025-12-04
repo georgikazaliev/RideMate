@@ -232,6 +232,7 @@ class RideServiceTest {
 
         Booking existingBooking = new Booking();
         existingBooking.setPassenger(user);
+        existingBooking.setStatus(com.ridemate.app.bookings.BookingStatus.APPROVED);
         ride.setBookings(Collections.singletonList(existingBooking));
 
         when(rideRepository.findById(rideId)).thenReturn(Optional.of(ride));
