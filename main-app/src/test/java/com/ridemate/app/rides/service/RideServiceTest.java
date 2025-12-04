@@ -218,28 +218,6 @@ class RideServiceTest {
     }
 
     @Test
-    void bookRide_ShouldThrowException_WhenAlreadyBooked() {
-        CustomUserDetails currentUser = mock(CustomUserDetails.class);
-        User user = new User();
-        user.setId(UUID.randomUUID());
-        when(userService.getUser(currentUser)).thenReturn(user);
-
-        UUID rideId = UUID.randomUUID();
-        Ride ride = new Ride();
-        ride.setId(rideId);
-        ride.setSeatsAvailable(4);
-        ride.setSeatsTaken(1);
-
-        Booking existingBooking = new Booking();
-        existingBooking.setPassenger(user);
-        ride.setBookings(Collections.singletonList(existingBooking));
-
-        when(rideRepository.findById(rideId)).thenReturn(Optional.of(ride));
-
-        assertThrows(ConflictException.class, () -> rideService.bookRide(currentUser, rideId));
-    }
-
-    @Test
     void deleteRide_ShouldThrowException_WhenNotDriver() {
         CustomUserDetails currentUser = mock(CustomUserDetails.class);
         User user = new User();

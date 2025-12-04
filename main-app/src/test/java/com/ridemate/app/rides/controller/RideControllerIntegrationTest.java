@@ -2,7 +2,6 @@ package com.ridemate.app.rides.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ridemate.app.rides.dto.RideDto;
-import com.ridemate.app.rides.repository.RideRepository;
 import com.ridemate.app.security.JwtUtil;
 import com.ridemate.app.users.UserRole;
 import com.ridemate.app.users.entity.User;
