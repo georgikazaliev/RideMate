@@ -16,6 +16,16 @@ import java.util.UUID;
 @Table(name = "users")
 @Data
 public class User {
+    public User(UUID userId, String username, String email, String password) {
+        this.id = userId;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+    }
+
+    public User() {
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
