@@ -78,6 +78,12 @@ public class AuditService {
         auditEntryRepository.deleteOlderThan(cutoff);
     }
 
+    @Transactional(readOnly = true)
+    public long countTotalEntries() {
+        logger.info("[AuditService] Counting total audit entries.");
+        return auditEntryRepository.count();
+    }
+
     private AuditEntryViewDTO mapToViewDTO(AuditEntry entry) {
         return new AuditEntryViewDTO(
                 entry.getId(),

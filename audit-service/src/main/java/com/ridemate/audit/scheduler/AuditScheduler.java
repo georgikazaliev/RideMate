@@ -19,14 +19,16 @@ public class AuditScheduler {
 
     @Scheduled(cron = "0 0 3 * * *")
     public void purgeOldEntries() {
-        logger.info("Scheduled task: Purging old audit entries started.");
+        logger.info("[Scheduler] Daily purge job triggered - removing old audit entries");
         auditService.purgeOldEntries();
-        logger.info("Scheduled task: Purging old audit entries finished.");
+        logger.info("[Scheduler] Daily purge job completed successfully");
     }
 
     @Scheduled(fixedRate = 3600000)
     public void computeStatistics() {
-        logger.info("Scheduled task: Computing hourly statistics.");
-        logger.info("Hourly statistics computed.");
+        logger.info("[Scheduler] Hourly statistics computation task initiated");
+        long totalEntries = auditService.countTotalEntries();
+        logger.info("[Scheduler] Total audit entries: {}", totalEntries);
+        logger.info("[Scheduler] Hourly statistics computation completed");
     }
 }
