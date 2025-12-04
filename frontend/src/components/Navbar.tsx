@@ -48,6 +48,11 @@ const Navbar = () => {
                                         <Link to="/booking-requests" className={navLinkClass('/booking-requests')}>Booking Requests</Link>
                                     </>
                                 )}
+                                {user && user.role === 'ADMIN' && (
+                                    <>
+                                        <Link to="/admin/users" className={navLinkClass('/admin/users')}>Manage Users</Link>
+                                    </>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -117,6 +122,11 @@ const Navbar = () => {
                             <>
                                 <Link to="/create-ride" className={mobileNavLinkClass('/create-ride')}>Offer Ride</Link>
                                 <Link to="/booking-requests" className={mobileNavLinkClass('/booking-requests')}>Booking Requests</Link>
+                            </>
+                        )}
+                        {user && user.role === 'ADMIN' && (
+                            <>
+                                <Link to="/admin/users" className={mobileNavLinkClass('/admin/users')}>Manage Users</Link>
                             </>
                         )}
                         {user && (

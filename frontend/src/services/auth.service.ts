@@ -15,6 +15,19 @@ export const register = async (username: string, email: string, password: string
     return response.data;
 };
 
+export const refreshToken = async (): Promise<AuthResponse> => {
+    const refreshToken = localStorage.getItem('refreshToken');
+    if (!refreshToken) {
+        throw new Error('No refresh token available');
+    }
+    const response = await api.post<AuthResponse>('/auth/refresh', { refreshToken });
+    if (response.data.accessToken) {
+        localStorage.setItem('token', response.data.accessToken);
+        localStorage.setItem('refreshToken', response.data.refreshToken);
+    }
+    return response.data;
+};
+
 export const logout = (): void => {
     localStorage.removeItem('token');
     localStorage.removeItem('refreshToken');
